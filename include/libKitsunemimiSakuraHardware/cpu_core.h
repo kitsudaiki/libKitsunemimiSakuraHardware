@@ -15,10 +15,10 @@ class CpuCore
 {
 public:
     CpuCore(const uint32_t coreId);
+    ~CpuCore();
 
     const uint32_t coreId;
 
-    bool hasThreadId(const uint32_t threadId) const;
     CpuThread* getThread(const uint32_t threadId) const;
     CpuThread* addThread(const uint32_t threadId);
     void addCpuThread(CpuThread *thread);

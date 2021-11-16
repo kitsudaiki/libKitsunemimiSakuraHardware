@@ -9,11 +9,28 @@ namespace Kitsunemimi
 namespace Sakura
 {
 
-Host::Host()
-{
+/**
+ * @brief constructor
+ */
+Host::Host() {}
 
+/**
+ * @brief destructor
+ */
+Host::~Host()
+{
+    for(uint32_t i = 0; i < cpuPackages.size(); i++) {
+        delete cpuPackages[i];
+    }
+
+    cpuPackages.clear();
 }
 
+/**
+ * @brief initialize the host-object with all necessary information of the system
+ *
+ * @return true, if successfull, else false
+ */
 bool
 Host::initHost()
 {
@@ -27,19 +44,13 @@ Host::initHost()
     return true;
 }
 
-bool
-Host::hasPackageId(const uint32_t packageId) const
-{
-    for(const CpuPackage* package : cpuPackages)
-    {
-        if(package->packageId == packageId) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
+/**
+ * @brief get a package by id
+ *
+ * @param packageId id of the requested package
+ *
+ * @return nullptr, if there is no package with the id, else pointer to the package
+ */
 CpuPackage*
 Host::getPackage(const uint32_t packageId) const
 {
@@ -53,6 +64,14 @@ Host::getPackage(const uint32_t packageId) const
     return nullptr;
 }
 
+/**
+ * @brief add a new package to the core
+ *
+ * @param packageId id of the package
+ *
+ * @return pointer to the package in list, if id already exist, else pointer to the new
+ *         created package-object
+ */
 CpuPackage*
 Host::addPackage(const uint32_t packageId)
 {
@@ -67,16 +86,17 @@ Host::addPackage(const uint32_t packageId)
     return package;
 }
 
-const
-std::string Host::toString()
-{
-    return "";
-}
-
+/**
+ * @brief get information of the host as json-formated string
+ *
+ * @return json-formated string with the information
+ */
 const
 std::string Host::toJsonString() const
 {
     std::string jsonString = "{";
+
+    // convert host-specific information
     jsonString.append("\"hostname\":\"" + hostName + "\",");
     if(hasHyperThrading) {
         jsonString.append("\"has_hyperthreading\":true,");
@@ -84,8 +104,8 @@ std::string Host::toJsonString() const
         jsonString.append("\"has_hyperthreading\":false,");
     }
 
+    // convert cpu-specific information
     jsonString.append("\"packages\":[");
-
     for(uint32_t i = 0; i < cpuPackages.size(); i++)
     {
         if(i > 0) {
@@ -99,8 +119,9 @@ std::string Host::toJsonString() const
 }
 
 /**
- * @brief Host::readHostName
- * @return
+ * @brief read host-name of the local system
+ *
+ * @return false, if reading the host-name failed, else true
  */
 bool
 Host::readHostName()
@@ -116,12 +137,14 @@ Host::readHostName()
 }
 
 /**
- * @brief Host::initCpuCoresAndThreads
- * @return
+ * @brief initalize all cpu-resources of the host
+ *
+ * @return true, if successfull, else false
  */
 bool
 Host::initCpuCoresAndThreads()
 {
+    // get common information
     hasHyperThrading = Kitsunemimi::Cpu::isHyperthreadingEnabled();
     const int32_t numberOfCpuThreads = Kitsunemimi::Cpu::getNumberOfCpuThreads();
     if(numberOfCpuThreads < 1)
@@ -129,9 +152,6 @@ Host::initCpuCoresAndThreads()
         // TODO: handle error
         return false;
     }
-
-    std::vector<CpuThread*> tempThreadBuffer;
-    std::vector<CpuCore*> tempCoreBuffer;
 
     // init the number of cpu-threads based on the physical number of threads
     for(int32_t i = 0; i < numberOfCpuThreads; i++)

@@ -6,24 +6,33 @@ namespace Kitsunemimi
 namespace Sakura
 {
 
+/**
+ * @brief constructor
+ *
+ * @param coreId id of the core
+ */
 CpuCore::CpuCore(const uint32_t coreId)
-    : coreId(coreId)
-{
-}
+    : coreId(coreId) {}
 
-bool
-CpuCore::hasThreadId(const uint32_t threadId) const
+/**
+ * @brief destructor
+ */
+CpuCore::~CpuCore()
 {
-    for(const CpuThread* thread : cpuThreads)
-    {
-        if(thread->threadId == threadId) {
-            return true;
-        }
+    for(uint32_t i = 0; i < cpuThreads.size(); i++) {
+        delete cpuThreads[i];
     }
 
-    return false;
+    cpuThreads.clear();
 }
 
+/**
+ * @brief get a thread by id
+ *
+ * @param threadId id of the requested thread
+ *
+ * @return nullptr, if there is no thead with the id, else pointer to the thread
+ */
 CpuThread*
 CpuCore::getThread(const uint32_t threadId) const
 {
@@ -37,6 +46,14 @@ CpuCore::getThread(const uint32_t threadId) const
     return nullptr;
 }
 
+/**
+ * @brief add a new thread to the core
+ *
+ * @param threadId id of the thread
+ *
+ * @return pointer to the thread in list, if id already exist, else pointer to the new
+ *         created thread-object
+ */
 CpuThread*
 CpuCore::addThread(const uint32_t threadId)
 {
@@ -51,14 +68,24 @@ CpuCore::addThread(const uint32_t threadId)
     return thread;
 }
 
+/**
+ * @brief add existing thread-object the the list of threads of the core
+ *
+ * @param thread pointer to thread to add to list
+ */
 void
 CpuCore::addCpuThread(CpuThread* thread)
 {
-    if(hasThreadId(thread->threadId) == false) {
+    if(getThread(thread->threadId) == nullptr) {
         cpuThreads.push_back(thread);
     }
 }
 
+/**
+ * @brief get maximum thermal spec of the package
+ *
+ * @return 0.0 if RAPL is not initialized, else thermal spec of the cpu-package
+ */
 double
 CpuCore::getThermalSpec() const
 {
@@ -69,6 +96,11 @@ CpuCore::getThermalSpec() const
     return 0.0;
 }
 
+/**
+ * @brief get current total power consumption of the cpu-package since the last check
+ *
+ * @return 0.0 if RAPL is not initialized, else current total power consumption of the cpu-package
+ */
 double
 CpuCore::getTotalPackagePower()
 {
@@ -79,11 +111,19 @@ CpuCore::getTotalPackagePower()
     return 0.0;
 }
 
+/**
+ * @brief get information of the core as json-formated string
+ *
+ * @return json-formated string with the information
+ */
 const std::string
 CpuCore::toJsonString()
 {
     std::string jsonString = "{";
     jsonString.append("\"id\":" + std::to_string(coreId));
+    // get information of the core coming from the first thread of the core, because multiple
+    // threads here means that hyperthreading is enabled, the all threads of the core have
+    // exactly the same information
     if(cpuThreads.size() > 0)
     {
         const CpuThread* thread = cpuThreads.at(0);
@@ -95,6 +135,7 @@ CpuCore::toJsonString()
         jsonString.append(",\"current_speed\":" + std::to_string(currentSpeed));
     }
 
+    // print information of the threads
     jsonString.append(",\"threads\":[");
     for(uint32_t i = 0; i < cpuThreads.size(); i++)
     {

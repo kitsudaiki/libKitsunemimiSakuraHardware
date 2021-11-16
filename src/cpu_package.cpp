@@ -9,24 +9,33 @@ namespace Kitsunemimi
 namespace Sakura
 {
 
+/**
+ * @brief constructor
+ *
+ * @param packageId id of the package
+ */
 CpuPackage::CpuPackage(const uint32_t packageId)
-    : packageId(packageId)
-{
-}
+    : packageId(packageId) {}
 
-bool
-CpuPackage::hasCoreId(const uint32_t coreId) const
+/**
+ * @brief destructor
+ */
+CpuPackage::~CpuPackage()
 {
-    for(const CpuCore* core : cpuCores)
-    {
-        if(core->coreId == coreId) {
-            return true;
-        }
+    for(uint32_t i = 0; i < cpuCores.size(); i++) {
+        delete cpuCores[i];
     }
 
-    return false;
+    cpuCores.clear();
 }
 
+/**
+ * @brief get a core by id
+ *
+ * @param coreId id of the requested core
+ *
+ * @return nullptr, if there is no core with the id, else pointer to the core
+ */
 CpuCore*
 CpuPackage::getCore(const uint32_t coreId) const
 {
@@ -40,6 +49,14 @@ CpuPackage::getCore(const uint32_t coreId) const
     return nullptr;
 }
 
+/**
+ * @brief add a new core to the core
+ *
+ * @param coreId id of the core
+ *
+ * @return pointer to the core in list, if id already exist, else pointer to the new
+ *         created core-object
+ */
 CpuCore*
 CpuPackage::addCore(const uint32_t coreId)
 {
@@ -54,7 +71,11 @@ CpuPackage::addCore(const uint32_t coreId)
     return core;
 }
 
-
+/**
+ * @brief get maximum thermal spec of the package
+ *
+ * @return 0.0 if RAPL is not initialized, else thermal spec of the cpu-package
+ */
 double
 CpuPackage::getThermalSpec() const
 {
@@ -65,6 +86,11 @@ CpuPackage::getThermalSpec() const
     return 0.0;
 }
 
+/**
+ * @brief get current total power consumption of the cpu-package since the last check
+ *
+ * @return 0.0 if RAPL is not initialized, else current total power consumption of the cpu-package
+ */
 double
 CpuPackage::getTotalPackagePower()
 {
@@ -75,6 +101,11 @@ CpuPackage::getTotalPackagePower()
     return 0.0;
 }
 
+/**
+ * @brief get information of the packe as json-formated string
+ *
+ * @return json-formated string with the information
+ */
 const std::string
 CpuPackage::toJsonString()
 {

@@ -17,6 +17,7 @@ class Host
 {
 public:
     Host();
+    ~Host();
 
     bool initHost();
 
@@ -24,11 +25,9 @@ public:
     bool hasHyperThrading;
     std::vector<CpuPackage*> cpuPackages;
 
-    bool hasPackageId(const uint32_t packageId) const;
     CpuPackage* getPackage(const uint32_t packageId) const;
     CpuPackage* addPackage(const uint32_t packageId);
 
-    const std::string toString();
     const std::string toJsonString() const;
 
 private:

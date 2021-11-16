@@ -17,6 +17,7 @@ class CpuThread
 {
 public:
     CpuThread(const uint32_t threadId);
+    ~CpuThread();
 
     const uint32_t threadId;
     const int64_t minSpeed = 0;

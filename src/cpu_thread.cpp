@@ -9,18 +9,33 @@ namespace Kitsunemimi
 namespace Sakura
 {
 
+/**
+ * @brief constructor
+ *
+ * @param threadId id of the physical cpu thread, which belongs to this thread
+ */
 CpuThread::CpuThread(const uint32_t threadId)
     : threadId(threadId),
       minSpeed(Kitsunemimi::Cpu::getMinimumSpeed(threadId)),
       maxSpeed(Kitsunemimi::Cpu::getMaximumSpeed(threadId)),
       currentMinSpeed(Kitsunemimi::Cpu::getCurrentMinimumSpeed(threadId)),
       currentMaxSpeed(Kitsunemimi::Cpu::getCurrentMaximumSpeed(threadId)),
-      m_rapl(threadId)
-{
+      m_rapl(threadId) {}
 
-}
+/**
+ * @brief destructor
+ */
+CpuThread::~CpuThread() {}
 
-bool CpuThread::initThread(Host* host)
+/**
+ * @brief initialize the new thread-object and add the thread to the topological tree of objects
+ *
+ * @param host pointer to the host-object at the top
+ *
+ * @return true, if successfull, else false
+ */
+bool
+CpuThread::initThread(Host* host)
 {
     if(minSpeed < 0) {
         // TODO: handle error
@@ -49,6 +64,7 @@ bool CpuThread::initThread(Host* host)
     // try to init rapl
     m_rapl.initRapl();
 
+    // add thread to the topological overview
     CpuPackage* package = host->addPackage(packageId);
     CpuCore* core = package->addCore(coreId);
     core->addCpuThread(this);
@@ -56,34 +72,54 @@ bool CpuThread::initThread(Host* host)
     return true;
 }
 
+/**
+ * @brief get current speed of the core
+ *
+ * @return -1, if reading the speed failed, else speed of the core
+ */
 int64_t
 CpuThread::getCurrentSpeed() const
 {
     return Kitsunemimi::Cpu::getCurrentSpeed(threadId);
 }
 
+/**
+ * @brief get maximum thermal spec of the package
+ *
+ * @return 0.0 if RAPL is not initialized, else thermal spec of the cpu-package
+ */
 double
 CpuThread::getThermalSpec() const
 {
+    // check if RAPL was successfully initialized
     if(m_rapl.isActive() == false) {
         return 0.0;
     }
 
-    const Kitsunemimi::Cpu::RaplInfo info = m_rapl.getInfo();
-    return info.thermal_spec_power;
+    return  m_rapl.getInfo().thermal_spec_power;
 }
 
+/**
+ * @brief get current total power consumption of the cpu-package since the last check
+ *
+ * @return 0.0 if RAPL is not initialized, else current total power consumption of the cpu-package
+ */
 double
 CpuThread::getTotalPackagePower()
 {
+    // check if RAPL was successfully initialized
     if(m_rapl.isActive() == false) {
         return 0.0;
     }
 
-    const Kitsunemimi::Cpu::RaplDiff diff = m_rapl.calculateDiff();
-    return diff.pkgAvg;
+    return m_rapl.calculateDiff().pkgAvg;
 }
 
+/**
+ * @brief get information of the thread as json-formated string
+ *
+ * @return json-formated string with the information
+ */
 const std::string
 CpuThread::toJsonString()
 {

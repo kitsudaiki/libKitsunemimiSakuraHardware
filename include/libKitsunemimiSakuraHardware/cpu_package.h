@@ -16,10 +16,10 @@ class CpuPackage
 {
 public:
     CpuPackage(const uint32_t packageId);
+    ~CpuPackage();
 
     const uint32_t packageId;
 
-    bool hasCoreId(const uint32_t coreId) const;
     CpuCore* getCore(const uint32_t coreId) const;
     CpuCore* addCore(const uint32_t coreId);
 
