@@ -40,10 +40,6 @@ namespace Sakura
  */
 CpuThread::CpuThread(const uint32_t threadId)
     : threadId(threadId),
-      minSpeed(Kitsunemimi::Cpu::getMinimumSpeed(threadId)),
-      maxSpeed(Kitsunemimi::Cpu::getMaximumSpeed(threadId)),
-      currentMinSpeed(Kitsunemimi::Cpu::getCurrentMinimumSpeed(threadId)),
-      currentMaxSpeed(Kitsunemimi::Cpu::getCurrentMaximumSpeed(threadId)),
       m_rapl(threadId) {}
 
 /**
@@ -61,32 +57,60 @@ CpuThread::~CpuThread() {}
 bool
 CpuThread::initThread(Host* host)
 {
-    if(minSpeed < 0) {
-        // TODO: handle error
+    ErrorContainer error;
+
+    // min-speed
+    minSpeed = Kitsunemimi::Cpu::getMinimumSpeed(threadId, error);
+    if(minSpeed < 0)
+    {
+        LOG_ERROR(error);
         return false;
     }
 
-    if(maxSpeed < 0) {
-        // TODO: handle error
+    // max-speed
+    maxSpeed = Kitsunemimi::Cpu::getMaximumSpeed(threadId, error);
+    if(maxSpeed < 0)
+    {
+        LOG_ERROR(error);
         return false;
     }
 
-    const int32_t coreId = Kitsunemimi::Cpu::getCpuCoreId(threadId);
+    // current-min-speed
+    currentMinSpeed = Kitsunemimi::Cpu::getCurrentMinimumSpeed(threadId, error);
+    if(currentMinSpeed < 0)
+    {
+        LOG_ERROR(error);
+        return false;
+    }
+
+    // current-max-speed
+    currentMaxSpeed = Kitsunemimi::Cpu::getCurrentMaximumSpeed(threadId, error);
+    if(currentMaxSpeed < 0)
+    {
+        LOG_ERROR(error);
+        return false;
+    }
+
+    // core-id
+    const int32_t coreId = Kitsunemimi::Cpu::getCpuCoreId(threadId, error);
     if(coreId < 0)
     {
-        // TODO: handle error
+        LOG_ERROR(error);
         return false;
     }
 
-    const int32_t packageId = Kitsunemimi::Cpu::getCpuPackageId(threadId);
+    // package-id
+    const int32_t packageId = Kitsunemimi::Cpu::getCpuPackageId(threadId, error);
     if(packageId < 0)
     {
-        // TODO: handle error
+        LOG_ERROR(error);
         return false;
     }
 
     // try to init rapl
-    m_rapl.initRapl();
+    if(m_rapl.initRapl(error)) {
+        LOG_ERROR(error);
+    }
 
     // add thread to the topological overview
     CpuPackage* package = host->addPackage(packageId);
@@ -104,7 +128,14 @@ CpuThread::initThread(Host* host)
 int64_t
 CpuThread::getCurrentSpeed() const
 {
-    return Kitsunemimi::Cpu::getCurrentSpeed(threadId);
+    ErrorContainer error;
+
+    const int64_t speed = Kitsunemimi::Cpu::getCurrentSpeed(threadId, error);
+    if(speed == -1) {
+        LOG_ERROR(error);
+    }
+
+    return speed;
 }
 
 /**

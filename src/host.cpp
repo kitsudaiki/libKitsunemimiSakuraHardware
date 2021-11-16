@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file        host.cpp
  *
  * @author      Tobias Anker <tobias.anker@kitsunemimi.moe>
@@ -54,12 +54,12 @@ Host::~Host()
  * @return true, if successfull, else false
  */
 bool
-Host::initHost()
+Host::initHost(ErrorContainer &error)
 {
-    if(readHostName() == false) {
+    if(readHostName(error) == false) {
         return false;
     }
-    if(initCpuCoresAndThreads() == false) {
+    if(initCpuCoresAndThreads(error) == false) {
         return false;
     }
 
@@ -146,11 +146,14 @@ std::string Host::toJsonString() const
  * @return false, if reading the host-name failed, else true
  */
 bool
-Host::readHostName()
+Host::readHostName(ErrorContainer &error)
 {
     const uint32_t maxHostNameLength = 256;
     char tempHostName[maxHostNameLength];
-    if(gethostname(tempHostName, maxHostNameLength) < 0) {
+    if(gethostname(tempHostName, maxHostNameLength) < 0)
+    {
+        error.errorMessage = "Failed to read host-name";
+        LOG_ERROR(error);
         return false;
     }
 
@@ -164,14 +167,14 @@ Host::readHostName()
  * @return true, if successfull, else false
  */
 bool
-Host::initCpuCoresAndThreads()
+Host::initCpuCoresAndThreads(ErrorContainer &error)
 {
     // get common information
-    hasHyperThrading = Kitsunemimi::Cpu::isHyperthreadingEnabled();
-    const int32_t numberOfCpuThreads = Kitsunemimi::Cpu::getNumberOfCpuThreads();
+    hasHyperThrading = Kitsunemimi::Cpu::isHyperthreadingEnabled(error);
+    const int32_t numberOfCpuThreads = Kitsunemimi::Cpu::getNumberOfCpuThreads(error);
     if(numberOfCpuThreads < 1)
     {
-        // TODO: handle error
+        LOG_ERROR(error);
         return false;
     }
 

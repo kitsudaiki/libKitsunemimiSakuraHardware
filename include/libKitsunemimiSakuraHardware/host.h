@@ -28,6 +28,8 @@
 #include <vector>
 #include <unistd.h>
 
+#include <libKitsunemimiCommon/logger.h>
+
 namespace Kitsunemimi
 {
 namespace Sakura
@@ -40,7 +42,7 @@ public:
     Host();
     ~Host();
 
-    bool initHost();
+    bool initHost(ErrorContainer &error);
 
     std::string hostName;
     bool hasHyperThrading;
@@ -52,8 +54,8 @@ public:
     const std::string toJsonString() const;
 
 private:
-    bool readHostName();
-    bool initCpuCoresAndThreads();
+    bool readHostName(ErrorContainer &error);
+    bool initCpuCoresAndThreads(ErrorContainer &error);
 };
 
 } // namespace Sakura

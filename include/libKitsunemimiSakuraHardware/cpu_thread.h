@@ -28,6 +28,7 @@
 #include <vector>
 
 #include <libKitsunemimiCpu/rapl.h>
+#include <libKitsunemimiCommon/logger.h>
 
 namespace Kitsunemimi
 {
@@ -42,8 +43,8 @@ public:
     ~CpuThread();
 
     const uint32_t threadId;
-    const int64_t minSpeed = 0;
-    const int64_t maxSpeed = 0;
+    int64_t minSpeed = 0;
+    int64_t maxSpeed = 0;
 
     int64_t currentMinSpeed = 0;
     int64_t currentMaxSpeed = 0;
