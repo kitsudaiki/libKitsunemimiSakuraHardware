@@ -26,7 +26,7 @@ public:
     int64_t currentMaxSpeed = 0;
 
     bool initThread(Host* host);
-    bool updateCurrentSpeed();
+    int64_t getCurrentSpeed() const;
 
     double getThermalSpec() const;
     double getTotalPackagePower();

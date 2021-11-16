@@ -13,6 +13,8 @@ CpuThread::CpuThread(const uint32_t threadId)
     : threadId(threadId),
       minSpeed(Kitsunemimi::Cpu::getMinimumSpeed(threadId)),
       maxSpeed(Kitsunemimi::Cpu::getMaximumSpeed(threadId)),
+      currentMinSpeed(Kitsunemimi::Cpu::getCurrentMinimumSpeed(threadId)),
+      currentMaxSpeed(Kitsunemimi::Cpu::getCurrentMaximumSpeed(threadId)),
       m_rapl(threadId)
 {
 
@@ -54,20 +56,10 @@ bool CpuThread::initThread(Host* host)
     return true;
 }
 
-bool
-CpuThread::updateCurrentSpeed()
+int64_t
+CpuThread::getCurrentSpeed() const
 {
-    currentMinSpeed = Kitsunemimi::Cpu::getCurrentMinimumSpeed(threadId);
-    if(currentMinSpeed < 0) {
-        return false;
-    }
-
-    currentMaxSpeed = Kitsunemimi::Cpu::getCurrentMaximumSpeed(threadId);
-    if(currentMaxSpeed < 0) {
-        return false;
-    }
-
-    return true;
+    return Kitsunemimi::Cpu::getCurrentSpeed(threadId);
 }
 
 double
@@ -95,7 +87,7 @@ CpuThread::getTotalPackagePower()
 const std::string
 CpuThread::toJsonString()
 {
-    updateCurrentSpeed();
+    getCurrentSpeed();
 
     std::string jsonString = "{";
     jsonString.append("\"id\":" + std::to_string(threadId));

@@ -86,12 +86,13 @@ CpuCore::toJsonString()
     jsonString.append("\"id\":" + std::to_string(coreId));
     if(cpuThreads.size() > 0)
     {
-        CpuThread* thread = cpuThreads.at(0);
-        thread->updateCurrentSpeed();
+        const CpuThread* thread = cpuThreads.at(0);
+        const int64_t currentSpeed = thread->getCurrentSpeed();
         jsonString.append(",\"minimum_speed\":" + std::to_string(thread->minSpeed));
         jsonString.append(",\"maximum_speed\":" + std::to_string(thread->maxSpeed));
         jsonString.append(",\"current_minimum_speed\":" + std::to_string(thread->currentMinSpeed));
         jsonString.append(",\"current_maximum_speed\":" + std::to_string(thread->currentMaxSpeed));
+        jsonString.append(",\"current_speed\":" + std::to_string(currentSpeed));
     }
 
     jsonString.append(",\"threads\":[");
