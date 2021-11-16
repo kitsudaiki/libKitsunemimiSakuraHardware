@@ -59,13 +59,42 @@ CpuCore::addCpuThread(CpuThread* thread)
     }
 }
 
+double
+CpuCore::getThermalSpec() const
+{
+    if(cpuThreads.size() > 0) {
+        return cpuThreads.at(0)->getThermalSpec();
+    }
+
+    return 0.0;
+}
+
+double
+CpuCore::getTotalPackagePower()
+{
+    if(cpuThreads.size() > 0) {
+        return cpuThreads.at(0)->getTotalPackagePower();
+    }
+
+    return 0.0;
+}
+
 const std::string
-CpuCore::toJsonString() const
+CpuCore::toJsonString()
 {
     std::string jsonString = "{";
-    jsonString.append("\"id\":" + std::to_string(coreId) + ",");
-    jsonString.append("\"threads\":[");
+    jsonString.append("\"id\":" + std::to_string(coreId));
+    if(cpuThreads.size() > 0)
+    {
+        CpuThread* thread = cpuThreads.at(0);
+        thread->updateCurrentSpeed();
+        jsonString.append(",\"minimum_speed\":" + std::to_string(thread->minSpeed));
+        jsonString.append(",\"maximum_speed\":" + std::to_string(thread->maxSpeed));
+        jsonString.append(",\"current_minimum_speed\":" + std::to_string(thread->currentMinSpeed));
+        jsonString.append(",\"current_maximum_speed\":" + std::to_string(thread->currentMaxSpeed));
+    }
 
+    jsonString.append(",\"threads\":[");
     for(uint32_t i = 0; i < cpuThreads.size(); i++)
     {
         if(i > 0) {

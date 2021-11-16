@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 
+#include <libKitsunemimiCpu/rapl.h>
 
 namespace Kitsunemimi
 {
@@ -27,7 +28,13 @@ public:
     bool initThread(Host* host);
     bool updateCurrentSpeed();
 
+    double getThermalSpec() const;
+    double getTotalPackagePower();
+
     const std::string toJsonString();
+
+private:
+    Kitsunemimi::Cpu::Rapl m_rapl;
 };
 
 }

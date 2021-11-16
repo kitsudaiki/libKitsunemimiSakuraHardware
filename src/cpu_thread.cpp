@@ -12,7 +12,8 @@ namespace Sakura
 CpuThread::CpuThread(const uint32_t threadId)
     : threadId(threadId),
       minSpeed(Kitsunemimi::Cpu::getMinimumSpeed(threadId)),
-      maxSpeed(Kitsunemimi::Cpu::getMaximumSpeed(threadId))
+      maxSpeed(Kitsunemimi::Cpu::getMaximumSpeed(threadId)),
+      m_rapl(threadId)
 {
 
 }
@@ -43,6 +44,9 @@ bool CpuThread::initThread(Host* host)
         return false;
     }
 
+    // try to init rapl
+    m_rapl.initRapl();
+
     CpuSocket* socket = host->addSocket(socketId);
     CpuCore* core = socket->addCore(coreId);
     core->addCpuThread(this);
@@ -66,6 +70,28 @@ CpuThread::updateCurrentSpeed()
     return true;
 }
 
+double
+CpuThread::getThermalSpec() const
+{
+    if(m_rapl.isActive() == false) {
+        return 0.0;
+    }
+
+    const Kitsunemimi::Cpu::RaplInfo info = m_rapl.getInfo();
+    return info.thermal_spec_power;
+}
+
+double
+CpuThread::getTotalPackagePower()
+{
+    if(m_rapl.isActive() == false) {
+        return 0.0;
+    }
+
+    const Kitsunemimi::Cpu::RaplDiff diff = m_rapl.calculateDiff();
+    return diff.pkgAvg;
+}
+
 const std::string
 CpuThread::toJsonString()
 {
@@ -73,10 +99,6 @@ CpuThread::toJsonString()
 
     std::string jsonString = "{";
     jsonString.append("\"id\":" + std::to_string(threadId));
-    jsonString.append(",\"minimum_speed\":" + std::to_string(minSpeed));
-    jsonString.append(",\"maximum_speed\":" + std::to_string(maxSpeed));
-    jsonString.append(",\"current_minimum_speed\":" + std::to_string(currentMinSpeed));
-    jsonString.append(",\"current_maximum_speed\":" + std::to_string(currentMaxSpeed));
     jsonString.append("}");
 
     return jsonString;

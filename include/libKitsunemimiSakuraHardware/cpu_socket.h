@@ -23,7 +23,10 @@ public:
     CpuCore* getCore(const uint32_t coreId) const;
     CpuCore* addCore(const uint32_t coreId);
 
-    const std::string toJsonString() const;
+    double getThermalSpec() const;
+    double getTotalPackagePower();
+
+    const std::string toJsonString();
 
     std::vector<CpuCore*> cpuCores;
 };

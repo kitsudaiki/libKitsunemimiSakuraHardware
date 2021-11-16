@@ -23,7 +23,10 @@ public:
     CpuThread* addThread(const uint32_t threadId);
     void addCpuThread(CpuThread *thread);
 
-    const std::string toJsonString() const;
+    double getThermalSpec() const;
+    double getTotalPackagePower();
+
+    const std::string toJsonString();
 
     std::vector<CpuThread*> cpuThreads;
 };

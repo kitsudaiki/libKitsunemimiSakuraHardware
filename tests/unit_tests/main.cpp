@@ -8,6 +8,7 @@ int main()
     Kitsunemimi::Sakura::Host host;
     host.initHost();
 
+    sleep(10);
     Kitsunemimi::Json::JsonItem json;
     std::string errorMessage = "";
     const bool success = json.parse(host.toJsonString(), errorMessage);

@@ -2,6 +2,7 @@
 
 #include <libKitsunemimiCpu/cpu.h>
 #include <libKitsunemimiSakuraHardware/cpu_core.h>
+#include <libKitsunemimiSakuraHardware/cpu_thread.h>
 
 namespace Kitsunemimi
 {
@@ -53,12 +54,35 @@ CpuSocket::addCore(const uint32_t coreId)
     return core;
 }
 
+
+double
+CpuSocket::getThermalSpec() const
+{
+    if(cpuCores.size() > 0) {
+        return cpuCores.at(0)->getThermalSpec();
+    }
+
+    return 0.0;
+}
+
+double
+CpuSocket::getTotalPackagePower()
+{
+    if(cpuCores.size() > 0) {
+        return cpuCores.at(0)->getTotalPackagePower();
+    }
+
+    return 0.0;
+}
+
 const std::string
-CpuSocket::toJsonString() const
+CpuSocket::toJsonString()
 {
     std::string jsonString = "{";
-    jsonString.append("\"id\":" + std::to_string(socketId) + ",");
-    jsonString.append("\"cores\":[");
+    jsonString.append("\"id\":" + std::to_string(socketId));
+    jsonString.append(",\"thermal_spec\":" + std::to_string(getThermalSpec()));
+    jsonString.append(",\"power\":" + std::to_string(getTotalPackagePower()));
+    jsonString.append(",\"cores\":[");
 
     for(uint32_t i = 0; i < cpuCores.size(); i++)
     {
