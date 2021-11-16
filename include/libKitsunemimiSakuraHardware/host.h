@@ -11,7 +11,7 @@ namespace Kitsunemimi
 {
 namespace Sakura
 {
-class CpuSocket;
+class CpuPackage;
 
 class Host
 {
@@ -22,11 +22,11 @@ public:
 
     std::string hostName;
     bool hasHyperThrading;
-    std::vector<CpuSocket*> cpuSockets;
+    std::vector<CpuPackage*> cpuPackages;
 
-    bool hasSocketId(const uint32_t socketId) const;
-    CpuSocket* getSocket(const uint32_t socketId) const;
-    CpuSocket* addSocket(const uint32_t socketId);
+    bool hasPackageId(const uint32_t packageId) const;
+    CpuPackage* getPackage(const uint32_t packageId) const;
+    CpuPackage* addPackage(const uint32_t packageId);
 
     const std::string toString();
     const std::string toJsonString() const;

@@ -1,5 +1,5 @@
 #include <libKitsunemimiSakuraHardware/cpu_thread.h>
-#include <libKitsunemimiSakuraHardware/cpu_socket.h>
+#include <libKitsunemimiSakuraHardware/cpu_package.h>
 #include <libKitsunemimiSakuraHardware/cpu_core.h>
 #include <libKitsunemimiSakuraHardware/host.h>
 #include <libKitsunemimiCpu/cpu.h>
@@ -39,8 +39,8 @@ bool CpuThread::initThread(Host* host)
         return false;
     }
 
-    const int32_t socketId = Kitsunemimi::Cpu::getCpuSocketId(threadId);
-    if(socketId < 0)
+    const int32_t packageId = Kitsunemimi::Cpu::getCpuPackageId(threadId);
+    if(packageId < 0)
     {
         // TODO: handle error
         return false;
@@ -49,8 +49,8 @@ bool CpuThread::initThread(Host* host)
     // try to init rapl
     m_rapl.initRapl();
 
-    CpuSocket* socket = host->addSocket(socketId);
-    CpuCore* core = socket->addCore(coreId);
+    CpuPackage* package = host->addPackage(packageId);
+    CpuCore* core = package->addCore(coreId);
     core->addCpuThread(this);
 
     return true;

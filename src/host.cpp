@@ -1,6 +1,6 @@
 #include <libKitsunemimiSakuraHardware/host.h>
 #include <libKitsunemimiCpu/cpu.h>
-#include <libKitsunemimiSakuraHardware/cpu_socket.h>
+#include <libKitsunemimiSakuraHardware/cpu_package.h>
 #include <libKitsunemimiSakuraHardware/cpu_core.h>
 #include <libKitsunemimiSakuraHardware/cpu_thread.h>
 
@@ -28,11 +28,11 @@ Host::initHost()
 }
 
 bool
-Host::hasSocketId(const uint32_t socketId) const
+Host::hasPackageId(const uint32_t packageId) const
 {
-    for(const CpuSocket* socket : cpuSockets)
+    for(const CpuPackage* package : cpuPackages)
     {
-        if(socket->socketId == socketId) {
+        if(package->packageId == packageId) {
             return true;
         }
     }
@@ -40,31 +40,31 @@ Host::hasSocketId(const uint32_t socketId) const
     return false;
 }
 
-CpuSocket*
-Host::getSocket(const uint32_t socketId) const
+CpuPackage*
+Host::getPackage(const uint32_t packageId) const
 {
-    for(CpuSocket* socket : cpuSockets)
+    for(CpuPackage* package : cpuPackages)
     {
-        if(socket->socketId == socketId) {
-            return socket;
+        if(package->packageId == packageId) {
+            return package;
         }
     }
 
     return nullptr;
 }
 
-CpuSocket*
-Host::addSocket(const uint32_t socketId)
+CpuPackage*
+Host::addPackage(const uint32_t packageId)
 {
-    CpuSocket* socket = getSocket(socketId);
+    CpuPackage* package = getPackage(packageId);
 
-    if(socket == nullptr)
+    if(package == nullptr)
     {
-        socket = new CpuSocket(socketId);
-        cpuSockets.push_back(socket);
+        package = new CpuPackage(packageId);
+        cpuPackages.push_back(package);
     }
 
-    return socket;
+    return package;
 }
 
 const
@@ -84,14 +84,14 @@ std::string Host::toJsonString() const
         jsonString.append("\"has_hyperthreading\":false,");
     }
 
-    jsonString.append("\"sockets\":[");
+    jsonString.append("\"packages\":[");
 
-    for(uint32_t i = 0; i < cpuSockets.size(); i++)
+    for(uint32_t i = 0; i < cpuPackages.size(); i++)
     {
         if(i > 0) {
             jsonString.append(",");
         }
-        jsonString.append(cpuSockets.at(i)->toJsonString());
+        jsonString.append(cpuPackages.at(i)->toJsonString());
     }
     jsonString.append("]}");
 

@@ -12,12 +12,12 @@ namespace Sakura
 {
 class CpuCore;
 
-class CpuSocket
+class CpuPackage
 {
 public:
-    CpuSocket(const uint32_t socketId);
+    CpuPackage(const uint32_t packageId);
 
-    const uint32_t socketId;
+    const uint32_t packageId;
 
     bool hasCoreId(const uint32_t coreId) const;
     CpuCore* getCore(const uint32_t coreId) const;

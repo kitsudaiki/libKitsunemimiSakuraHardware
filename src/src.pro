@@ -20,13 +20,13 @@ INCLUDEPATH += $$PWD \
 
 HEADERS += \
     ../include/libKitsunemimiSakuraHardware/cpu_core.h \
-    ../include/libKitsunemimiSakuraHardware/cpu_socket.h \
+    ../include/libKitsunemimiSakuraHardware/cpu_package.h \
     ../include/libKitsunemimiSakuraHardware/cpu_thread.h \
     ../include/libKitsunemimiSakuraHardware/host.h
 
 SOURCES += \
     cpu_core.cpp \
-    cpu_socket.cpp \
+    cpu_package.cpp \
     cpu_thread.cpp \
     host.cpp
 
