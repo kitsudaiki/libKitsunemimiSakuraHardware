@@ -28,12 +28,13 @@
 int main()
 {
     Kitsunemimi::Sakura::Host host;
-    host.initHost();
+    Kitsunemimi::ErrorContainer error;
+    host.initHost(error);
 
     sleep(10);
     Kitsunemimi::Json::JsonItem json;
     std::string errorMessage = "";
-    const bool success = json.parse(host.toJsonString(), errorMessage);
+    const bool success = json.parse(host.toJsonString(), error);
     if(success == false) {
         std::cout<<"error: "<<errorMessage<<std::endl;
         return 1;

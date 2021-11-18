@@ -152,7 +152,7 @@ Host::readHostName(ErrorContainer &error)
     char tempHostName[maxHostNameLength];
     if(gethostname(tempHostName, maxHostNameLength) < 0)
     {
-        error.errorMessage = "Failed to read host-name";
+        error.addMeesage("Failed to read host-name");
         LOG_ERROR(error);
         return false;
     }
