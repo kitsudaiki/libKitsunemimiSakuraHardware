@@ -42,15 +42,15 @@ public:
     CpuThread(const uint32_t threadId);
     ~CpuThread();
 
-    const uint32_t threadId;
-    int64_t minSpeed = 0;
-    int64_t maxSpeed = 0;
+    const uint64_t threadId;
+    uint64_t minSpeed = 0;
+    uint64_t maxSpeed = 0;
 
-    int64_t currentMinSpeed = 0;
-    int64_t currentMaxSpeed = 0;
+    uint64_t currentMinSpeed = 0;
+    uint64_t currentMaxSpeed = 0;
 
     bool initThread(Host* host);
-    int64_t getCurrentSpeed() const;
+    uint64_t getCurrentSpeed() const;
 
     double getThermalSpec() const;
     double getTotalPackagePower();

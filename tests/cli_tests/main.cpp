@@ -31,11 +31,13 @@ int main()
     Kitsunemimi::ErrorContainer error;
     host.initHost(error);
 
+    std::cout<<"wait for 10 seconds"<<std::endl;
     sleep(10);
     Kitsunemimi::Json::JsonItem json;
     std::string errorMessage = "";
     const bool success = json.parse(host.toJsonString(), error);
-    if(success == false) {
+    if(success == false)
+    {
         std::cout<<"error: "<<errorMessage<<std::endl;
         return 1;
     }

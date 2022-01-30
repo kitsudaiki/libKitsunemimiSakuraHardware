@@ -52,7 +52,7 @@ CpuThread::~CpuThread() {}
  *
  * @param host pointer to the host-object at the top
  *
- * @return true, if successfull, else false
+ * @return true, if successful, else false
  */
 bool
 CpuThread::initThread(Host* host)
@@ -60,55 +60,51 @@ CpuThread::initThread(Host* host)
     ErrorContainer error;
 
     // min-speed
-    minSpeed = Kitsunemimi::Cpu::getMinimumSpeed(threadId, error);
-    if(minSpeed < 0)
+    if(Kitsunemimi::Cpu::getMinimumSpeed(minSpeed, threadId, error) == false)
     {
         LOG_ERROR(error);
         return false;
     }
 
     // max-speed
-    maxSpeed = Kitsunemimi::Cpu::getMaximumSpeed(threadId, error);
-    if(maxSpeed < 0)
+    if(Kitsunemimi::Cpu::getMaximumSpeed(maxSpeed, threadId, error) == false)
     {
         LOG_ERROR(error);
         return false;
     }
 
     // current-min-speed
-    currentMinSpeed = Kitsunemimi::Cpu::getCurrentMinimumSpeed(threadId, error);
-    if(currentMinSpeed < 0)
+    if(Kitsunemimi::Cpu::getCurrentMinimumSpeed(currentMinSpeed, threadId, error) == false)
     {
         LOG_ERROR(error);
         return false;
     }
 
     // current-max-speed
-    currentMaxSpeed = Kitsunemimi::Cpu::getCurrentMaximumSpeed(threadId, error);
-    if(currentMaxSpeed < 0)
+    if(Kitsunemimi::Cpu::getCurrentMaximumSpeed(currentMaxSpeed, threadId, error) == false)
     {
         LOG_ERROR(error);
         return false;
     }
 
     // core-id
-    const int32_t coreId = Kitsunemimi::Cpu::getCpuCoreId(threadId, error);
-    if(coreId < 0)
+    uint64_t coreId = 0;
+    if(Kitsunemimi::Cpu::getCpuCoreId(coreId, threadId, error) == false)
     {
         LOG_ERROR(error);
         return false;
     }
 
     // package-id
-    const int32_t packageId = Kitsunemimi::Cpu::getCpuPackageId(threadId, error);
-    if(packageId < 0)
+    uint64_t packageId = 0;
+    if(Kitsunemimi::Cpu::getCpuPackageId(packageId, threadId, error) == false)
     {
         LOG_ERROR(error);
         return false;
     }
 
     // try to init rapl
-    if(m_rapl.initRapl(error)) {
+    if(m_rapl.initRapl(error) == false) {
         LOG_ERROR(error);
     }
 
@@ -125,14 +121,16 @@ CpuThread::initThread(Host* host)
  *
  * @return -1, if reading the speed failed, else speed of the core
  */
-int64_t
+uint64_t
 CpuThread::getCurrentSpeed() const
 {
     ErrorContainer error;
 
-    const int64_t speed = Kitsunemimi::Cpu::getCurrentSpeed(threadId, error);
-    if(speed == -1) {
+    uint64_t speed = 0;
+    if(Kitsunemimi::Cpu::getCurrentSpeed(speed, threadId, error) == false)
+    {
         LOG_ERROR(error);
+        return 0;
     }
 
     return speed;
@@ -151,7 +149,7 @@ CpuThread::getThermalSpec() const
         return 0.0;
     }
 
-    return  m_rapl.getInfo().thermal_spec_power;
+    return m_rapl.getInfo().thermal_spec_power;
 }
 
 /**

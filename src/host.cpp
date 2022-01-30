@@ -51,7 +51,7 @@ Host::~Host()
 /**
  * @brief initialize the host-object with all necessary information of the system
  *
- * @return true, if successfull, else false
+ * @return true, if successful, else false
  */
 bool
 Host::initHost(ErrorContainer &error)
@@ -164,22 +164,22 @@ Host::readHostName(ErrorContainer &error)
 /**
  * @brief initalize all cpu-resources of the host
  *
- * @return true, if successfull, else false
+ * @return true, if successful, else false
  */
 bool
 Host::initCpuCoresAndThreads(ErrorContainer &error)
 {
     // get common information
     hasHyperThrading = Kitsunemimi::Cpu::isHyperthreadingEnabled(error);
-    const int32_t numberOfCpuThreads = Kitsunemimi::Cpu::getNumberOfCpuThreads(error);
-    if(numberOfCpuThreads < 1)
+    uint64_t numberOfCpuThreads = 0;
+    if(Kitsunemimi::Cpu::getNumberOfCpuThreads(numberOfCpuThreads, error) < 1)
     {
         LOG_ERROR(error);
         return false;
     }
 
     // init the number of cpu-threads based on the physical number of threads
-    for(int32_t i = 0; i < numberOfCpuThreads; i++)
+    for(uint64_t i = 0; i < numberOfCpuThreads; i++)
     {
         CpuThread* thread = new CpuThread(i);
         if(thread->initThread(this) == false) {
