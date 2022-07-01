@@ -56,6 +56,7 @@ public:
     double getTotalPackagePower();
 
     const std::string toJsonString();
+    DataMap* toJson();
 
 private:
     Kitsunemimi::Cpu::Rapl m_rapl;

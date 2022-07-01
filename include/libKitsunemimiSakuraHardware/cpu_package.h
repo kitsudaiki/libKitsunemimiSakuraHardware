@@ -27,8 +27,11 @@
 #include <iostream>
 #include <vector>
 
+#include <libKitsunemimiCommon/common_items/data_items.h>
+
 namespace Kitsunemimi
 {
+class DataMap;
 namespace Sakura
 {
 class CpuCore;
@@ -48,6 +51,7 @@ public:
     double getTotalPackagePower();
 
     const std::string toJsonString();
+    Kitsunemimi::DataMap* toJson();
 
     std::vector<CpuCore*> cpuCores;
 };

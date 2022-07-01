@@ -15,6 +15,11 @@ LIBS += -L../../libKitsunemimiCpu/src/debug -lKitsunemimiCpu
 LIBS += -L../../libKitsunemimiCpu/src/release -lKitsunemimiCpu
 INCLUDEPATH += ../../libKitsunemimiCpu/include
 
+LIBS += -L../../libKitsunemimiInterface/src -lKitsunemimiInterface
+LIBS += -L../../libKitsunemimiInterface/src/debug -lKitsunemimiInterface
+LIBS += -L../../libKitsunemimiInterface/src/release -lKitsunemimiInterface
+INCLUDEPATH += ../../libKitsunemimiInterface/include
+
 INCLUDEPATH += $$PWD \
                $$PWD/../include
 

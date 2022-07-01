@@ -176,13 +176,24 @@ CpuThread::getTotalPackagePower()
 const std::string
 CpuThread::toJsonString()
 {
-    getCurrentSpeed();
-
     std::string jsonString = "{";
     jsonString.append("\"id\":" + std::to_string(threadId));
     jsonString.append("}");
 
     return jsonString;
+}
+
+/**
+ * @brief get information of the thread as json-like item-tree
+
+ * @return json-like item-tree with the information
+ */
+DataMap*
+CpuThread::toJson()
+{
+    DataMap* result = new DataMap();
+    result->insert("id", new DataValue((long)threadId));
+    return result;
 }
 
 } // namespace Sakura

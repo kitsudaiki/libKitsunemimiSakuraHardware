@@ -24,6 +24,8 @@
 
 #include <libKitsunemimiSakuraHardware/cpu_thread.h>
 
+#include <libKitsunemimiCommon/common_items/data_items.h>
+
 namespace Kitsunemimi
 {
 namespace Sakura
@@ -150,12 +152,11 @@ CpuCore::toJsonString()
     if(cpuThreads.size() > 0)
     {
         const CpuThread* thread = cpuThreads.at(0);
-        const int64_t currentSpeed = thread->getCurrentSpeed();
         jsonString.append(",\"minimum_speed\":" + std::to_string(thread->minSpeed));
         jsonString.append(",\"maximum_speed\":" + std::to_string(thread->maxSpeed));
         jsonString.append(",\"current_minimum_speed\":" + std::to_string(thread->currentMinSpeed));
         jsonString.append(",\"current_maximum_speed\":" + std::to_string(thread->currentMaxSpeed));
-        jsonString.append(",\"current_speed\":" + std::to_string(currentSpeed));
+        jsonString.append(",\"current_speed\":" + std::to_string(thread->getCurrentSpeed()));
     }
 
     // print information of the threads
@@ -170,6 +171,41 @@ CpuCore::toJsonString()
     jsonString.append("]}");
 
     return jsonString;
+}
+
+/**
+ * @brief get information of the core as json-like item-tree
+
+ * @return json-like item-tree with the information
+ */
+DataMap*
+CpuCore::toJson()
+{
+    DataMap* result = new DataMap();
+
+    result->insert("id", new DataValue((long)coreId));
+
+    // get information of the core coming from the first thread of the core, because multiple
+    // threads here means that hyperthreading is enabled, the all threads of the core have
+    // exactly the same information
+    if(cpuThreads.size() > 0)
+    {
+        const CpuThread* thread = cpuThreads.at(0);
+        result->insert("minimum_speed", new DataValue((long)thread->minSpeed));
+        result->insert("maximum_speed", new DataValue((long)thread->maxSpeed));
+        result->insert("current_minimum_speed", new DataValue((long)thread->currentMinSpeed));
+        result->insert("current_maximum_speed", new DataValue((long)thread->currentMaxSpeed));
+        result->insert("current_speed", new DataValue((long)thread->getCurrentSpeed()));
+    }
+
+    // print information of the threads
+    DataArray* threads = new DataArray();
+    for(uint32_t i = 0; i < cpuThreads.size(); i++) {
+        threads->append(cpuThreads.at(i)->toJson());
+    }
+    result->insert("threads", threads);
+
+    return result;
 }
 
 } // namespace Sakura

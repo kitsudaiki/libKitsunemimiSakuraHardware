@@ -32,6 +32,7 @@
 
 namespace Kitsunemimi
 {
+class DataMap;
 namespace Sakura
 {
 class CpuPackage;
@@ -52,6 +53,7 @@ public:
     CpuPackage* addPackage(const uint32_t packageId);
 
     const std::string toJsonString() const;
+    Kitsunemimi::DataMap* toJson() const;
 
 private:
     bool readHostName(ErrorContainer &error);

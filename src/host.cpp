@@ -21,10 +21,12 @@
  */
 
 #include <libKitsunemimiSakuraHardware/host.h>
-#include <libKitsunemimiCpu/cpu.h>
 #include <libKitsunemimiSakuraHardware/cpu_package.h>
 #include <libKitsunemimiSakuraHardware/cpu_core.h>
 #include <libKitsunemimiSakuraHardware/cpu_thread.h>
+
+#include <libKitsunemimiCpu/cpu.h>
+#include <libKitsunemimiCommon/common_items/data_items.h>
 
 namespace Kitsunemimi
 {
@@ -113,8 +115,8 @@ Host::addPackage(const uint32_t packageId)
  *
  * @return json-formated string with the information
  */
-const
-std::string Host::toJsonString() const
+const std::string
+Host::toJsonString() const
 {
     std::string jsonString = "{";
 
@@ -138,6 +140,30 @@ std::string Host::toJsonString() const
     jsonString.append("]}");
 
     return jsonString;
+}
+
+/**
+ * @brief get information of the host as json-like item-tree
+
+ * @return json-like item-tree with the information
+ */
+DataMap*
+Host::toJson() const
+{
+    Kitsunemimi::DataMap* result = new DataMap();
+
+    // convert host-specific information
+    result->insert("hostname", new DataValue(hostName));
+    result->insert("has_hyperthreading", new DataValue(hasHyperThrading));
+
+    // convert cpu-specific information
+    DataArray* packages = new DataArray();
+    for(uint32_t i = 0; i < cpuPackages.size(); i++) {
+        packages->append(cpuPackages.at(i)->toJson());
+    }
+    result->insert("packages", packages);
+
+    return result;
 }
 
 /**

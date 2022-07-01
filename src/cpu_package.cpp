@@ -125,19 +125,21 @@ CpuPackage::getTotalPackagePower()
 }
 
 /**
- * @brief get information of the packe as json-formated string
+ * @brief get information of the package as json-formated string
  *
  * @return json-formated string with the information
  */
 const std::string
 CpuPackage::toJsonString()
 {
+    // convert package-information
     std::string jsonString = "{";
     jsonString.append("\"id\":" + std::to_string(packageId));
     jsonString.append(",\"thermal_spec\":" + std::to_string(getThermalSpec()));
     jsonString.append(",\"power\":" + std::to_string(getTotalPackagePower()));
     jsonString.append(",\"cores\":[");
 
+    // convert cores
     for(uint32_t i = 0; i < cpuCores.size(); i++)
     {
         if(i > 0) {
@@ -148,6 +150,30 @@ CpuPackage::toJsonString()
     jsonString.append("]}");
 
     return jsonString;
+}
+
+/**
+ * @brief get information of the package as json-like item-tree
+
+ * @return json-like item-tree with the information
+ */
+DataMap*
+CpuPackage::toJson()
+{
+    // convert package-information
+    DataMap* result = new DataMap();
+    result->insert("id", new DataValue((long)packageId));
+    result->insert("thermal_spec", new DataValue(getThermalSpec()));
+    result->insert("power", new DataValue(getTotalPackagePower()));
+
+    // convert cores
+    DataArray* cores = new DataArray();
+    for(uint32_t i = 0; i < cpuCores.size(); i++) {
+        cores->append(cpuCores.at(i)->toJson());
+    }
+    result->insert("cores", cores);
+
+    return result;
 }
 
 } // namespace Sakura
