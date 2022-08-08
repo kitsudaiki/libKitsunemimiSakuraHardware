@@ -49,21 +49,6 @@ function get_required_kitsune_lib_repo () {
     build_kitsune_lib_repo $REPO_NAME $NUMBER_OF_THREADS $ADDITIONAL_CONFIGS
 }
 
-function get_required_private_repo_gitlab () {
-    REPO_NAME=$1
-    TAG_OR_BRANCH=$2
-    TOKEN=$3
-    ADDITIONAL_CONFIGS=$4
-    NUMBER_OF_THREADS=$5
-
-    # clone repo
-    git clone http://kitsudaiki:$TOKEN@10.0.3.120/hanami/$REPO_NAME.git "$PARENT_DIR/$REPO_NAME"
-    cd "$PARENT_DIR/$REPO_NAME"
-    git checkout $TAG_OR_BRANCH
-
-    build_kitsune_lib_repo $REPO_NAME $NUMBER_OF_THREADS $ADDITIONAL_CONFIGS
-}
-
 function get_required_private_repo_github () {
     REPO_NAME=$1
     TAG_OR_BRANCH=$2
@@ -71,7 +56,7 @@ function get_required_private_repo_github () {
     ADDITIONAL_CONFIGS=$4
 
     # clone repo
-    git clone https://kitsudaiki:986ec116cd18aa45cfb81e57916518f6ff83bf19@github.com/kitsudaiki/$REPO_NAME.git "$PARENT_DIR/$REPO_NAME"
+    git clone https://kitsudaiki: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@github.com/kitsudaiki/$REPO_NAME.git "$PARENT_DIR/$REPO_NAME"
     cd "$PARENT_DIR/$REPO_NAME"
     git checkout $TAG_OR_BRANCH
 
@@ -80,9 +65,9 @@ function get_required_private_repo_github () {
 
 #-----------------------------------------------------------------------------------------------------------------
 
-get_required_kitsune_lib_repo "libKitsunemimiCommon" "v0.26.1" 4 "staticlib"
+get_required_kitsune_lib_repo "libKitsunemimiCommon" "develop" 8 "staticlib"
 
-get_required_private_repo_github  "libKitsunemimiCpu" "v0.3.0" 4 "staticlib"
+get_required_private_repo_github  "libKitsunemimiCpu" "develop" 8 "staticlib"
 
 #-----------------------------------------------------------------------------------------------------------------
 

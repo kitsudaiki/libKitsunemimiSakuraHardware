@@ -24,7 +24,7 @@
 
 #include <libKitsunemimiSakuraHardware/cpu_thread.h>
 
-#include <libKitsunemimiCommon/common_items/data_items.h>
+#include <libKitsunemimiCommon/items/data_items.h>
 
 namespace Kitsunemimi
 {
