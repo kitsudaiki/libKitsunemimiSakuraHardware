@@ -52,6 +52,8 @@ public:
     CpuPackage* getPackage(const uint32_t packageId) const;
     CpuPackage* addPackage(const uint32_t packageId);
 
+    double getTotalTemperature(ErrorContainer &error);
+
     const std::string toJsonString() const;
     Kitsunemimi::DataMap* toJson() const;
 

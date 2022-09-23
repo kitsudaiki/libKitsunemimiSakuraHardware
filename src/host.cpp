@@ -111,6 +111,28 @@ Host::addPackage(const uint32_t packageId)
 }
 
 /**
+ * @brief get average of the temperature of all packages
+ *
+ * @param error reference for error-output
+ *
+ * @return average of the temperature of all packages
+ */
+double
+Host::getTotalTemperature(ErrorContainer &error)
+{
+    std::vector<uint64_t> ids;
+    Kitsunemimi::Cpu::getPkgTemperatureIds(ids, error);
+
+    double result = 0.0f;
+    for(const uint64_t id : ids) {
+        result += Kitsunemimi::Cpu::getPkgTemperature(id, error);
+    }
+    result /= static_cast<double>(ids.size());
+
+    return result;
+}
+
+/**
  * @brief get information of the host as json-formated string
  *
  * @return json-formated string with the information
