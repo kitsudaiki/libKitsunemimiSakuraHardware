@@ -164,7 +164,6 @@ CpuPackage::toJson()
     DataMap* result = new DataMap();
     result->insert("id", new DataValue((long)packageId));
     result->insert("thermal_spec", new DataValue(getThermalSpec()));
-    result->insert("power", new DataValue(getTotalPackagePower()));
 
     // convert cores
     DataArray* cores = new DataArray();
