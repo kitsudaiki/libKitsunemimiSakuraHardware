@@ -60,28 +60,28 @@ CpuThread::initThread(Host* host)
     ErrorContainer error;
 
     // min-speed
-    if(Kitsunemimi::Cpu::getMinimumSpeed(minSpeed, threadId, error) == false)
+    if(getMinimumSpeed(minSpeed, threadId, error) == false)
     {
         LOG_ERROR(error);
         return false;
     }
 
     // max-speed
-    if(Kitsunemimi::Cpu::getMaximumSpeed(maxSpeed, threadId, error) == false)
+    if(getMaximumSpeed(maxSpeed, threadId, error) == false)
     {
         LOG_ERROR(error);
         return false;
     }
 
     // current-min-speed
-    if(Kitsunemimi::Cpu::getCurrentMinimumSpeed(currentMinSpeed, threadId, error) == false)
+    if(getCurrentMinimumSpeed(currentMinSpeed, threadId, error) == false)
     {
         LOG_ERROR(error);
         return false;
     }
 
     // current-max-speed
-    if(Kitsunemimi::Cpu::getCurrentMaximumSpeed(currentMaxSpeed, threadId, error) == false)
+    if(getCurrentMaximumSpeed(currentMaxSpeed, threadId, error) == false)
     {
         LOG_ERROR(error);
         return false;
@@ -89,7 +89,7 @@ CpuThread::initThread(Host* host)
 
     // core-id
     uint64_t coreId = 0;
-    if(Kitsunemimi::Cpu::getCpuCoreId(coreId, threadId, error) == false)
+    if(getCpuCoreId(coreId, threadId, error) == false)
     {
         LOG_ERROR(error);
         return false;
@@ -97,7 +97,7 @@ CpuThread::initThread(Host* host)
 
     // package-id
     uint64_t packageId = 0;
-    if(Kitsunemimi::Cpu::getCpuPackageId(packageId, threadId, error) == false)
+    if(getCpuPackageId(packageId, threadId, error) == false)
     {
         LOG_ERROR(error);
         return false;
@@ -122,12 +122,12 @@ CpuThread::initThread(Host* host)
  * @return -1, if reading the speed failed, else speed of the core
  */
 uint64_t
-CpuThread::getCurrentSpeed() const
+CpuThread::getCurrentThreadSpeed() const
 {
     ErrorContainer error;
 
     uint64_t speed = 0;
-    if(Kitsunemimi::Cpu::getCurrentSpeed(speed, threadId, error) == false)
+    if(getCurrentSpeed(speed, threadId, error) == false)
     {
         LOG_ERROR(error);
         return 0;

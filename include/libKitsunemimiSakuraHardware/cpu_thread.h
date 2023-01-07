@@ -50,7 +50,7 @@ public:
     uint64_t currentMaxSpeed = 0;
 
     bool initThread(Host* host);
-    uint64_t getCurrentSpeed() const;
+    uint64_t getCurrentThreadSpeed() const;
 
     double getThermalSpec() const;
     double getTotalPackagePower();
@@ -59,7 +59,7 @@ public:
     DataMap* toJson();
 
 private:
-    Kitsunemimi::Cpu::Rapl m_rapl;
+    Rapl m_rapl;
 };
 
 } // namespace Sakura

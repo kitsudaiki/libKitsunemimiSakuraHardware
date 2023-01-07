@@ -121,11 +121,11 @@ double
 Host::getTotalTemperature(ErrorContainer &error)
 {
     std::vector<uint64_t> ids;
-    Kitsunemimi::Cpu::getPkgTemperatureIds(ids, error);
+    getPkgTemperatureIds(ids, error);
 
     double result = 0.0f;
     for(const uint64_t id : ids) {
-        result += Kitsunemimi::Cpu::getPkgTemperature(id, error);
+        result += getPkgTemperature(id, error);
     }
     result /= static_cast<double>(ids.size());
 
@@ -218,9 +218,9 @@ bool
 Host::initCpuCoresAndThreads(ErrorContainer &error)
 {
     // get common information
-    hasHyperThrading = Kitsunemimi::Cpu::isHyperthreadingEnabled(error);
+    hasHyperThrading = isHyperthreadingEnabled(error);
     uint64_t numberOfCpuThreads = 0;
-    if(Kitsunemimi::Cpu::getNumberOfCpuThreads(numberOfCpuThreads, error) < 1)
+    if(getNumberOfCpuThreads(numberOfCpuThreads, error) < 1)
     {
         LOG_ERROR(error);
         return false;
