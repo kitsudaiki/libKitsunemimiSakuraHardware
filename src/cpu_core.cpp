@@ -156,7 +156,7 @@ CpuCore::toJsonString()
         jsonString.append(",\"maximum_speed\":" + std::to_string(thread->maxSpeed));
         jsonString.append(",\"current_minimum_speed\":" + std::to_string(thread->currentMinSpeed));
         jsonString.append(",\"current_maximum_speed\":" + std::to_string(thread->currentMaxSpeed));
-        jsonString.append(",\"current_speed\":" + std::to_string(thread->getCurrentSpeed()));
+        jsonString.append(",\"current_speed\":" + std::to_string(thread->getCurrentThreadSpeed()));
     }
 
     // print information of the threads
@@ -195,7 +195,7 @@ CpuCore::toJson()
         result->insert("maximum_speed", new DataValue((long)thread->maxSpeed));
         result->insert("current_minimum_speed", new DataValue((long)thread->currentMinSpeed));
         result->insert("current_maximum_speed", new DataValue((long)thread->currentMaxSpeed));
-        result->insert("current_speed", new DataValue((long)thread->getCurrentSpeed()));
+        result->insert("current_speed", new DataValue((long)thread->getCurrentThreadSpeed()));
     }
 
     // print information of the threads

@@ -43,7 +43,7 @@ int main()
 
     std::cout<<"wait for 10 seconds"<<std::endl;
     sleep(10);
-    Kitsunemimi::Json::JsonItem json;
+    Kitsunemimi::JsonItem json;
     std::string errorMessage = "";
     const bool success = json.parse(host.toJsonString(), error);
     if(success == false)
